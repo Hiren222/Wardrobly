@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { PROJECTS } from '../data/wardrobeData';
+import { useSiteContent } from '../context/SiteContentContext';
 import { ProjectCategory, WardrobeProject } from '../types';
 import { ProjectModal } from './ProjectModal';
 import { Eye, ArrowUpRight, Sparkles } from 'lucide-react';
@@ -13,6 +13,7 @@ interface OurWorkSectionProps {
 }
 
 export const OurWorkSection: React.FC<OurWorkSectionProps> = ({ onSelectProjectForInquiry }) => {
+  const { data } = useSiteContent();
   const [activeFilter, setActiveFilter] = useState<ProjectCategory>('All');
   const [selectedProject, setSelectedProject] = useState<WardrobeProject | null>(null);
   
@@ -23,8 +24,8 @@ export const OurWorkSection: React.FC<OurWorkSectionProps> = ({ onSelectProjectF
   const filters: ProjectCategory[] = ['All', 'Walk-In', 'Fitted', 'Dressing Room', 'Contemporary', 'Classic'];
 
   const filteredProjects = activeFilter === 'All'
-    ? PROJECTS
-    : PROJECTS.filter((p) => p.category === activeFilter);
+    ? data.projects
+    : data.projects.filter((p) => p.category === activeFilter);
 
   // Initialize GSAP Smooth Stacking Cards Scrub
   useEffect(() => {

@@ -1,0 +1,82 @@
+{
+  "entities": {
+    "HeroContent": {
+      "title": "Hero Content Configuration",
+      "description": "Configuration for the hero video, poster, headlines and eyebrows",
+      "type": "object",
+      "properties": {
+        "headline": { "type": "string" },
+        "subheadline": { "type": "string" },
+        "eyebrow": { "type": "string" },
+        "posterUrl": { "type": "string" },
+        "videoUrl": { "type": "string" },
+        "hasVideoChunks": { "type": "boolean" },
+        "totalVideoChunks": { "type": "number" },
+        "updatedAt": { "type": "string" }
+      }
+    },
+    "VideoChunk": {
+      "title": "Hero Video Chunk",
+      "description": "Segmented video data to stay under Firestore document size limits",
+      "type": "object",
+      "properties": {
+        "index": { "type": "number" },
+        "chunk": { "type": "string" }
+      },
+      "required": ["index", "chunk"]
+    },
+    "WardrobeProjectDoc": {
+      "title": "Wardrobe Project",
+      "description": "Individual wardrobe project in portfolio",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "categoryLabel": { "type": "string" },
+        "image": { "type": "string" },
+        "galleryImages": { "type": "string" },
+        "description": { "type": "string" },
+        "details": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "title", "image"]
+    },
+    "TransformationDoc": {
+      "title": "Transformation Item",
+      "description": "Before and After comparison item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "description": { "type": "string" },
+        "beforeImage": { "type": "string" },
+        "afterImage": { "type": "string" },
+        "beforeAlt": { "type": "string" },
+        "afterAlt": { "type": "string" },
+        "highlights": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "title", "beforeImage", "afterImage"]
+    }
+  },
+  "firestore": {
+    "/site_content/{documentId}": {
+      "schema": "HeroContent",
+      "description": "Global website content settings and metadata"
+    },
+    "/site_hero_video/{chunkId}": {
+      "schema": "VideoChunk",
+      "description": "Chunked video storage segments"
+    },
+    "/site_projects/{projectId}": {
+      "schema": "WardrobeProjectDoc",
+      "description": "Bespoke wardrobe projects catalog"
+    },
+    "/site_transformations/{transformationId}": {
+      "schema": "TransformationDoc",
+      "description": "Before and after transformation comparisons"
+    }
+  }
+}

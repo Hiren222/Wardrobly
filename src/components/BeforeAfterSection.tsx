@@ -1,8 +1,11 @@
 import React from 'react';
-import { TRANSFORMATIONS } from '../data/wardrobeData';
+import { useSiteContent } from '../context/SiteContentContext';
 import { BeforeAfterSlider } from './BeforeAfterSlider';
 
 export const BeforeAfterSection: React.FC = () => {
+  const { data } = useSiteContent();
+  const { transformations } = data;
+
   return (
     <section
       id="transformations"
@@ -24,9 +27,9 @@ export const BeforeAfterSection: React.FC = () => {
           </p>
         </div>
 
-        {/* 3 Transformation Cards Stacked Vertically with Generous Spacing */}
+        {/* Transformation Cards Stacked Vertically with Generous Spacing */}
         <div className="space-y-12 sm:space-y-16">
-          {TRANSFORMATIONS.map((item, idx) => (
+          {transformations.map((item, idx) => (
             <BeforeAfterSlider
               key={item.id}
               item={item}

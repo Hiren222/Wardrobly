@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Instagram, Compass, ExternalLink } from 'lucide-react';
+import { Instagram, Compass, ExternalLink, Lock } from 'lucide-react';
 import { LegalModal } from './LegalModal';
 
 interface FooterProps {
   onNavigate: (sectionId: string) => void;
+  onOpenAdmin?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenAdmin }) => {
   const [legalType, setLegalType] = useState<'privacy' | 'terms' | null>(null);
 
   return (
@@ -190,6 +191,20 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             >
               Terms of Service
             </button>
+            {onOpenAdmin && (
+              <>
+                <span>|</span>
+                <button
+                  onClick={onOpenAdmin}
+                  title="Studio Media Manager"
+                  className="opacity-30 hover:opacity-100 hover:text-[#C4913A] transition-all flex items-center gap-1 cursor-pointer"
+                  aria-label="Studio Media Manager"
+                >
+                  <Lock className="w-3 h-3" />
+                  <span className="text-[10px]">Studio Portal</span>
+                </button>
+              </>
+            )}
           </div>
         </div>
 

@@ -12,39 +12,28 @@ export const Header: React.FC<HeaderProps> = ({ activeSection, onNavigate }) => 
 
   useEffect(() => {
     const handleScroll = () => {
-      // Check the content section that immediately follows the pinned hero video
+      // Find the main content flow section directly following the hero video
       const contentFlow = document.getElementById('content-flow') || document.getElementById('work');
       if (contentFlow) {
         const rect = contentFlow.getBoundingClientRect();
-        // The header is 70-80px tall. When the content arrives at or above the header, switch to solid background
-        setIsScrolled(rect.top <= 80);
+        // Keep header transparent during the entire video scrub; transition to solid only when content reaches the header (<= 75px)
+        setIsScrolled(rect.top <= 75);
         return;
       }
 
-      // Check pin spacer if created by GSAP ScrollTrigger
-      const pinSpacer = document.querySelector('.pin-spacer');
-      if (pinSpacer) {
-        const rect = pinSpacer.getBoundingClientRect();
-        setIsScrolled(rect.bottom <= 80);
-        return;
-      }
-
-      // Fallback: estimate based on scroll distance (hero pins for ~2.5x viewport height)
-      const threshold = window.innerHeight * 2.2;
-      setIsScrolled(window.scrollY >= threshold);
+      // Fallback: keep transparent until scrolled past the full viewport height
+      setIsScrolled(window.scrollY >= window.innerHeight * 0.9);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleScroll, { passive: true });
     handleScroll();
 
-    // Re-check after GSAP layout calculations
-    const t1 = setTimeout(handleScroll, 100);
-    const t2 = setTimeout(handleScroll, 500);
+    // Re-verify after layout setup
+    const timer = setTimeout(handleScroll, 150);
 
     return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
+      clearTimeout(timer);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
     };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { SiteContentProvider } from './context/SiteContentContext';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
 import { MilestoneStrip } from './components/MilestoneStrip';
@@ -8,11 +9,13 @@ import { WhyChooseUsSection } from './components/WhyChooseUsSection';
 import { TestimonialsSection } from './components/TestimonialsSection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
+import { AdminPanel } from './components/admin/AdminPanel';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState<string>('hero');
   const [selectedProjectType, setSelectedProjectType] = useState<string>('');
   const [selectedStylePreference, setSelectedStylePreference] = useState<string>('');
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
 
   // Smooth Scroll Helper
   const scrollToSection = (sectionId: string) => {
@@ -61,50 +64,61 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF6F0] text-[#2A2420] flex flex-col font-sans selection:bg-[#C4913A] selection:text-white">
-      {/* Sticky Header */}
-      <Header
-        activeSection={activeSection}
-        onNavigate={scrollToSection}
-      />
-
-      {/* Main Content Flow */}
-      <main className="flex-1">
-        {/* 1. Pinned Hero Video Section (z-0) */}
-        <HeroSection
-          onSeeWorkClick={() => scrollToSection('work')}
-          onBookClick={() => scrollToSection('contact')}
+    <SiteContentProvider>
+      <div className="min-h-screen bg-[#FAF6F0] text-[#2A2420] flex flex-col font-sans selection:bg-[#C4913A] selection:text-white">
+        {/* Sticky Header (Strictly public nav only) */}
+        <Header
+          activeSection={activeSection}
+          onNavigate={scrollToSection}
         />
 
-        {/* Content sections layered with z-index 1 & solid background scrolling on top of hero */}
-        <div id="content-flow" className="relative z-[1] bg-[#FAF6F0] shadow-2xl">
-          {/* 2. Milestone Strip */}
-          <MilestoneStrip />
-
-          {/* 3. Our Work Portfolio Grid & Modal */}
-          <OurWorkSection
-            onSelectProjectForInquiry={handleSelectProjectForInquiry}
+        {/* Main Content Flow */}
+        <main className="flex-1">
+          {/* 1. Pinned Hero Video Section (z-0) */}
+          <HeroSection
+            onSeeWorkClick={() => scrollToSection('work')}
+            onBookClick={() => scrollToSection('contact')}
           />
 
-          {/* 4. Interactive Before and After Comparison Section */}
-          <BeforeAfterSection />
+          {/* Content sections layered with z-index 1 & solid background scrolling on top of hero */}
+          <div id="content-flow" className="relative z-[1] bg-[#FAF6F0] shadow-2xl">
+            {/* 2. Milestone Strip */}
+            <MilestoneStrip />
 
-          {/* 5. Why Choose Us */}
-          <WhyChooseUsSection />
+            {/* 3. Our Work Portfolio Grid & Modal */}
+            <OurWorkSection
+              onSelectProjectForInquiry={handleSelectProjectForInquiry}
+            />
 
-          {/* 6. Testimonials */}
-          <TestimonialsSection />
+            {/* 4. Interactive Before and After Comparison Section */}
+            <BeforeAfterSection />
 
-          {/* 7. Contact and Consultation Booking Form */}
-          <ContactSection
-            initialProjectType={selectedProjectType}
-            initialStylePreference={selectedStylePreference}
-          />
+            {/* 5. Why Choose Us */}
+            <WhyChooseUsSection />
 
-          {/* Footer */}
-          <Footer onNavigate={scrollToSection} />
-        </div>
-      </main>
-    </div>
+            {/* 6. Testimonials */}
+            <TestimonialsSection />
+
+            {/* 7. Contact and Consultation Booking Form */}
+            <ContactSection
+              initialProjectType={selectedProjectType}
+              initialStylePreference={selectedStylePreference}
+            />
+
+            {/* Footer with discreet Admin Portal access */}
+            <Footer 
+              onNavigate={scrollToSection} 
+              onOpenAdmin={() => setIsAdminOpen(true)}
+            />
+          </div>
+        </main>
+
+        {/* Studio Admin Media Manager Modal */}
+        <AdminPanel
+          isOpen={isAdminOpen}
+          onClose={() => setIsAdminOpen(false)}
+        />
+      </div>
+    </SiteContentProvider>
   );
 }
